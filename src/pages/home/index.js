@@ -1,22 +1,23 @@
 import { Container, MovieList, Movie } from "./styles"
+/* import {APIKey} from '../../config/key' */
+import { APIKey, databaseIMg } from "../../config/apiConfig";
+import { useEffect, useState } from "react"
 
 function Home() {
-    const movies = [
-        {
-            title: "The Batman",
-            image_url: "https://br.web.img3.acsta.net/pictures/22/03/02/19/26/3666027.jpg"
-        },
-        {
-            title: "Batman O cavaleiro das trevas",
-            image_url: "https://upload.wikimedia.org/wikipedia/pt/d/d1/The_Dark_Knight.jpg"
-
-        },
-        {
-            title: "Coringa",
-            image_url: "https://s2.glbimg.com/SQeVdjKCjqzbxdQPl_u0-Fofq-k=/362x536/https://s2.glbimg.com/9OPnzDyVxRn-Eh-9lnCEzKcVY7Q=/i.s3.glbimg.com/v1/AUTH_c3c606ff68e7478091d1ca496f9c5625/internal_photos/bs/2021/E/H/rJSyxnTomNRR1CRbfAkw/6605194-poster.jpg"
-
-        }
-    ]
+    //o useState([]) indica que a váriavel vai iniciar com um array vazio;
+    //O useState ele retorna duas coisas 1º uma variável que armazena o estado em si no caso 'movies'
+    //2º Uma variável que atualiza esse estado 'setMovies'
+    //o uso effect é utilizado para executar o consumo de dados toda vez que o programa for iniciado
+    const [movies, setMovies] = useState([]);
+    //o useEffect aceita dois parametros, o primeiro é o que deseja ser executado no caso consumir a api, e em 2º um array de dependencias
+    useEffect(() => {
+        fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${APIKey}&language=pt-BR&page=1`)
+            .then(response => response.json() )
+            .then(data => 
+                setMovies(data.results)
+                
+            )
+    }, [])
 
     return (
         <Container>
@@ -26,9 +27,9 @@ function Home() {
                 {movies.map(movie => {
 
                     return (
-                        <Movie>
+                        <Movie key={movie.id}>
                             <a href="google.com.br">
-                                <img src={movie.image_url} alt={movie.title} />
+                                <img src={databaseIMg + movie.poster_path} alt={movie.title} />
                             </a>
                             <span>{movie.title}</span>
                         </Movie>
